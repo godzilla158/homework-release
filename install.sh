@@ -39,25 +39,36 @@ info "From : $SOURCE_DIR"
 info "To   : $TARGET"
 
 # ------------------------------------------------------- copy into place
+# Safe to re-run any time: only NEW/CHANGED code files get copied over
+# (rsync skips ones that already match), nothing gets duplicated, and your
+# real vcs_schedule.json / license.key / saved data are never touched —
+# they're excluded below and never overwritten by a later run.
 if [ "$SOURCE_DIR" = "$TARGET" ]; then
   info "Already running from ~/.homework — nothing to copy."
 else
-  if [ -e "$TARGET" ]; then
-    printf '\n~/.homework already exists. Overwrite its Scripts with this copy? [y/N] '
-    read -r reply || reply=""
-    case "$reply" in
-      y|Y) ;;
-      *) die "Left ~/.homework untouched. Move it aside and re-run if you want a fresh install." ;;
-    esac
-  fi
+  ALREADY_INSTALLED=0
+  [ -e "$TARGET" ] && ALREADY_INSTALLED=1
   mkdir -p "$TARGET"
-  # Copy code + docs only; skip generated data, caches, and any login.
+  # Copy code + docs only; skip generated data, caches, any login, and
+  # (critically) the buyer's own already-customized vcs_schedule.json —
+  # that one's handled separately below so a second run can't wipe it.
   rsync -a --delete \
     --exclude '.git' --exclude '.venv' --exclude 'Debug' \
     --exclude '.last_run_*' --exclude '.gemini_model.txt' \
+    --exclude 'Scripts/lib/vcs_schedule.json' \
+    --exclude 'license.key' --exclude '.usage.json' \
     "$SOURCE_DIR/Scripts" "$SOURCE_DIR/README.md" "$TARGET/" 2>/dev/null \
     || { cp -R "$SOURCE_DIR/Scripts" "$TARGET/"; cp "$SOURCE_DIR/README.md" "$TARGET/" 2>/dev/null || true; }
-  info "Copied Scripts/ and README.md into ~/.homework."
+  # First install only: seed the empty template. A later run leaves an
+  # existing vcs_schedule.json (your real classes) completely alone.
+  if [ ! -f "$TARGET/Scripts/lib/vcs_schedule.json" ]; then
+    cp "$SOURCE_DIR/Scripts/lib/vcs_schedule.json" "$TARGET/Scripts/lib/vcs_schedule.json" 2>/dev/null || true
+  fi
+  if [ "$ALREADY_INSTALLED" = "1" ]; then
+    info "Updated ~/.homework with what's new (your classes/setup/login were left alone)."
+  else
+    info "Copied Scripts/ and README.md into ~/.homework."
+  fi
 fi
 
 # --------------------------------------------------------- executable bits
