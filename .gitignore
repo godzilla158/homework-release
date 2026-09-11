@@ -11,6 +11,8 @@ Archive/
 .last_run_class.txt
 .last_run_dates.txt
 .gemini_model.txt
+/license.key
+/.usage.json
 
 # every class folder holds only generated .txt — ignore those, keep code
 /*/*.txt

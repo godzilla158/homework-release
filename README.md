@@ -79,6 +79,7 @@ Safe to re-run. The manual steps below do the same thing by hand.
 | `map`     | Writes `!START HERE.txt` — a **⚠️ UPCOMING TESTS & DEADLINES** board pulled from every AI summary (soonest first), then a per-class list of what's on disk |
 | `info`    | Rebuilds the `Info/` folder (skeleton, migrates leftovers, drops stray empty folders) and opens it in Finder. (Shadows the rarely-used GNU `info` reader in your shell.) |
 | `setup`   | Runs the Class Setup Wizard — add/redo your classes, teachers, course ids, and A/B-day schedule. Runs automatically on a fresh install; re-run any time |
+| `setup --license` | Enter a license key. Without one, `hw`/`hwai`'s fetch step and `ai` each get 30 free runs (shared between `hw` and `hwai`); a key removes the cap. `arrange`, `map`, `info`, `clean`, and `setup` itself are always unlimited |
 
 ### Environment toggles for `hw`
 - `VCS_MODE=future|past|individual` — skip the first menu
