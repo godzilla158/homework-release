@@ -1,0 +1,22 @@
+# environment / caches
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# generated data — scraped plans, summaries, logs, indexes, run markers
+/Debug/
+/All Classes/
+Archive/
+.last_run_class.txt
+.last_run_dates.txt
+.gemini_model.txt
+
+# every class folder holds only generated .txt — ignore those, keep code
+/*/*.txt
+
+# release build output
+/Info/
+/dist/
+/.venv-app/
+/build/

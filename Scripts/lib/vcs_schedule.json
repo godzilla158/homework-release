@@ -1,0 +1,15 @@
+{
+  "_comment": "Empty on purpose — install.sh runs the setup wizard (Scripts/lib/setup_wizard.py) to fill this in with the buyer's own classes on first run. Re-run any time with the 'setup' command.",
+  "day_type_anchor": {
+    "date": "2026-01-05",
+    "value": "A",
+    "_comment": "Replaced by the setup wizard."
+  },
+  "open_period": {
+    "sentinel": "__OPEN__",
+    "label": "Open period — (free period, no class)",
+    "day": "A",
+    "period": 0
+  },
+  "courses": []
+}
