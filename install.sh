@@ -56,7 +56,7 @@ else
     --exclude '.git' --exclude '.venv' --exclude 'Debug' \
     --exclude '.last_run_*' --exclude '.gemini_model.txt' \
     --exclude 'Scripts/lib/vcs_schedule.json' \
-    --exclude 'license.key' --exclude '.usage.json' \
+    --exclude 'license.key' --exclude '.usage.json' --exclude '.usage.lock' \
     "$SOURCE_DIR/Scripts" "$SOURCE_DIR/README.md" "$TARGET/" 2>/dev/null \
     || { cp -R "$SOURCE_DIR/Scripts" "$TARGET/"; cp "$SOURCE_DIR/README.md" "$TARGET/" 2>/dev/null || true; }
   # First install only: seed the empty template. A later run leaves an

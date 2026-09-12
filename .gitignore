@@ -13,6 +13,7 @@ Archive/
 .gemini_model.txt
 /license.key
 /.usage.json
+/.usage.lock
 
 # every class folder holds only generated .txt — ignore those, keep code
 /*/*.txt
