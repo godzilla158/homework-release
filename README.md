@@ -102,14 +102,6 @@ or `~/Desktop`, the 6 AM run will fail with "Operation not permitted" in
 `Debug/launchd.err.log` (running the commands yourself from Terminal still
 works). The fix is to move it back to `~/.homework`.
 
-## Setting up the AI summary (optional)
-1. Get a free key at https://aistudio.google.com/apikey (no credit card needed)
-2. Run:
-   ```
-   echo 'export GEMINI_API_KEY="your-key-here"' >> ~/.zshrc
-   source ~/.zshrc
-   ```
-
 ## Setting up your classes
 First install (or any time `vcs_schedule.json` has no classes in it),
 `install.sh` runs the **Class Setup Wizard** for you — it asks for each
