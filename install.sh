@@ -130,26 +130,10 @@ if [ "$NEEDS_SETUP" = "yes" ]; then
   fi
 fi
 
-# ----------------------------------------------------------- optional: AI key
-say "AI summaries (optional)"
-info "Claude (recommended, reliable) or Google Gemini (free tier)."
-printf '  Paste an Anthropic key (sk-ant-...) and Return, or just Return to skip: '
-read -r anthropic_key || anthropic_key=""
-if [ -n "$anthropic_key" ]; then
-  grep -q 'ANTHROPIC_API_KEY' "$ZSHRC" 2>/dev/null \
-    || echo "export ANTHROPIC_API_KEY=\"$anthropic_key\"" >> "$ZSHRC"
-  info "Saved ANTHROPIC_API_KEY to ~/.zshrc."
-else
-  printf '  Paste a Google Gemini key and Return, or just Return to skip: '
-  read -r gemini_key || gemini_key=""
-  if [ -n "$gemini_key" ]; then
-    grep -q 'GEMINI_API_KEY' "$ZSHRC" 2>/dev/null \
-      || echo "export GEMINI_API_KEY=\"$gemini_key\"" >> "$ZSHRC"
-    info "Saved GEMINI_API_KEY to ~/.zshrc."
-  else
-    info "No key saved — 'hw' still works, 'ai' won't until you add one."
-  fi
-fi
+# ------------------------------------------------------- license key
+say "License key"
+info "hw, hwai, and ai need a license key to run. Get one, then activate it with:"
+info "  setup --license"
 
 # ------------------------------------------------ optional: 6 AM auto-run
 say "Weekday 6:00 AM auto-run (optional)"
