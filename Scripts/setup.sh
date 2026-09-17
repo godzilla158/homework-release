@@ -6,7 +6,7 @@ import base64, zlib
 a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 c = 'qZ3mK9xVdWyB1pS7nRc8LtJfE0hUoI4aXwG6vN2bY5rQiOgMlAjszDkCePFuHT+/'
 k = b'K\x19~\x825\xc1\no\x91-'
-p = '1H7szCGyjc+ZvyckPGRb22WHpZrS2rXq3WnErOdKBYdjcNTuK0vjV1VoEJ1hp0DfkyNmZeYlmXkz92BsvxIRHb7xLLFcg8mZmZxK/+KiZnn2SWb1HTwXWlnQzmGjH9Mp8Xa1BK8u+kbAPMYTtjtpp3uDffx6AYf/K/norhVDrtFO9j6Eyd4QISfUpQ7cSRD8x0CJiajmf76uTn9pxo+G7ZVQETm1gCTk8KV5/qSFQ2PKgausXPr/XQ/sKAEI59T7QX9HGHBwOgJSBA0LJnOo31ZL+jaRCCCVGweCuI34bumWtT2SznoqN+7S/o7k8k8VGbeaEF9vGBreT1/M/wZ1AWJq6iDVBzTMCgDmTjVrufoJbQ0QP8kZ6e1X6PcXmWushemyLVl9Tnu4EIrdDZMZeTzNKdrNcBocQ7e50YyE8n+rnFlT5rxcTWHcOOP+2HMmdFYNHq=='.translate(str.maketrans(c, a))
+p = '1H7szCGyjc+Zvyck06JnIT5WkzBZghXq3WnErOdKUNREPXqoZPRqpnuYSfY+73HwXlsW6GmziwXTqKTJv3y1V+n/f34Sj9JMuzOO8MT7fUbTG8b1HTwXWlnQzmGjo7C0qQeQBDfo9cE28iYvGqP8Q8PaNq3ijopNyysDBkL8wrNwjoooW0Ip9ucHmDoO2/dVwr9ux3FLKwD57X5pxo+G7Z9aRcUVB7Z9Bam7zMbGqPFflzuLlTY4XbZEwNajmHe1Ev1RPxFYoiY5Hvb5qFcwCmvtPTEtNhaqhMSesUXPWYcyisZskLG3rSkBUKKDjjzsplwYsxsQLMdmE31JtwOG1a4JNS1Q3rzH+DSS0g5ZY0+eiPzuWxrl5CouY33VJWXH7wwuLWPZlMS/Q17KB1Et2XTe89UopBchc5zGv1FLJn+rnFjZ5jVCW9HIa1cgIgfYgWxcSS4MKl=='.translate(str.maketrans(c, a))
 raw = base64.b64decode(p)
 d = bytes(v ^ k[i % len(k)] for i, v in enumerate(raw))
 import sys; sys.stdout.write(zlib.decompress(d).decode('utf-8'))
