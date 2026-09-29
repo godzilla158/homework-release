@@ -7,13 +7,14 @@
 #
 #     bash ~/Downloads/homework/install.sh
 #
-# It will:
-#   1. Put the project at ~/.homework  (macOS requires this exact spot for
-#      the optional 6 AM auto-run to work)
+# It will, automatically, with no prompts:
+#   1. Put the project at ~/.homework (macOS requires this exact spot for
+#      the 6 AM auto-run to work)
 #   2. Make the scripts executable
 #   3. Add the `hw` / `ai` / `hwai` / `clean` / ... shortcuts to ~/.zshrc
 #   4. Build the Python environment and download the headless browser
-#   5. Optionally save an AI key and install the weekday-morning auto-run
+#      (shown as one clean progress line, not the raw download output)
+#   5. Install the weekday 6 AM auto-run
 #
 # Safe to run again later — it only adds what's missing.
 
@@ -98,15 +99,43 @@ else
 fi
 
 # ----------------------------------------------------- python environment
-say "Building the Python environment (first time only, ~1–2 min)"
+say "Setting up (first time only, ~1-2 min)"
 cd "$TARGET"
 [ -d .venv ] || python3 -m venv .venv
 # shellcheck disable=SC1091
 source .venv/bin/activate
-pip install --upgrade pip --quiet
-python -c "import playwright" 2>/dev/null || pip install playwright --quiet
-python -m playwright install chromium && touch ".venv/.pw-ready"
-info "Python environment ready."
+
+# Runs everything (pip upgrade, playwright install, chromium download —
+# normally a wall of scrolling percentage bars) in the background, quietly,
+# and shows one clean progress line instead. Full output still goes to a
+# log file, so a real failure is never silently hidden.
+PROGRESS_LOG="$(mktemp -t homework-install-log)"
+(
+  pip install --upgrade pip --quiet
+  python -c "import playwright" 2>/dev/null || pip install playwright --quiet
+  python -m playwright install chromium
+  touch ".venv/.pw-ready"
+) > "$PROGRESS_LOG" 2>&1 &
+INSTALL_PID=$!
+
+SPIN='|/-\'
+START_TS=$(date +%s)
+i=0
+while kill -0 "$INSTALL_PID" 2>/dev/null; do
+  i=$(( (i + 1) % 4 ))
+  ELAPSED=$(( $(date +%s) - START_TS ))
+  printf "\r  [%s] Downloading and preparing... (%ds)   " "${SPIN:$i:1}" "$ELAPSED"
+  sleep 0.2
+done
+wait "$INSTALL_PID" && INSTALL_STATUS=0 || INSTALL_STATUS=$?
+printf "\r  Python environment ready.                          \n"
+
+if [ "$INSTALL_STATUS" -ne 0 ]; then
+  printf '\n\033[31mERROR:\033[0m Setup failed — full log below:\n\n' >&2
+  cat "$PROGRESS_LOG" >&2
+  exit 1
+fi
+rm -f "$PROGRESS_LOG"
 
 # ------------------------------------------------------- first-run classes
 # A fresh install (or the obfuscated release build) ships with an EMPTY
@@ -135,14 +164,12 @@ say "License key"
 info "hw, hwai, and ai need a license key to run. Get one, then activate it with:"
 info "  setup --license"
 
-# ------------------------------------------------ optional: 6 AM auto-run
-say "Weekday 6:00 AM auto-run (optional)"
-printf '  Install it now? [y/N] '
-read -r reply || reply=""
-case "$reply" in
-  y|Y) "$TARGET/Scripts/automation/install_daily.sh" ;;
-  *)   info "Skipped. Install later with: ~/.homework/Scripts/automation/install_daily.sh" ;;
-esac
+# --------------------------------------------------- weekday 6 AM auto-run
+say "Weekday 6:00 AM auto-run"
+"$TARGET/Scripts/automation/install_daily.sh" > /dev/null 2>&1 \
+  && info "Installed — homework will be fetched automatically every weekday morning." \
+  || info "Couldn't install it automatically — run later with: ~/.homework/Scripts/automation/install_daily.sh"
+info "Turn it off any time with: ~/.homework/Scripts/automation/install_daily.sh uninstall"
 
 # ---------------------------------------------------------------- done
 say "Done!"
