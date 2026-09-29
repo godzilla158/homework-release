@@ -23,3 +23,5 @@ Archive/
 /dist/
 /.venv-app/
 /build/
+Scripts/build/license_server/redeemed_keys.db
+Scripts/build/license_server/.venv/
